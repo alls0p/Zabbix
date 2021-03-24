@@ -1,0 +1,36 @@
+zabbix_export:
+  version: '5.2'
+  date: '2021-03-24T16:58:42Z'
+  groups:
+    -
+      name: 'Shinobi Cameras'
+  templates:
+    -
+      template: 'Shinobi Camera'
+      name: 'Shinobi Camera'
+      description: 'Watches status of individual camera'
+      groups:
+        -
+          name: 'Shinobi Cameras'
+      items:
+        -
+          name: 'Camera Status'
+          type: HTTP_AGENT
+          key: cam_status
+          trends: '0'
+          value_type: TEXT
+          timeout: 30s
+          url: 'http://{$SERVER_IP}:8080/{$API_KEY}/monitor/{$GROUP_KEY}/{$MONITOR_ID}'
+          triggers:
+            -
+              expression: '{str("\"status\": \"Recording\"")}<>1'
+              name: 'Camera Down'
+      macros:
+        -
+          macro: '{$API_KEY}'
+        -
+          macro: '{$GROUP_KEY}'
+        -
+          macro: '{$MONITOR_ID}'
+        -
+          macro: '{$SERVER_IP}'
